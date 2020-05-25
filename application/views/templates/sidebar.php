@@ -19,20 +19,22 @@
 
       <li class="nav-item" id="sidebarTambah">
         <a class="nav-link" href="<?=base_url()?>civitas/tambahcivitas">
-          <i class="fas fa-fw fa-user"></i>
+          <i class="fas fa-fw fa-user-plus"></i>
           <span>Tambah Civitas</span></a>
       </li>
 
-      <li class="nav-item" id="sidebarKpq">
-        <a class="nav-link" href="<?=base_url()?>civitas/listkpq">
-          <i class="fas fa-fw fa-user"></i>
-          <span>KPQ</span></a>
-      </li>
-
-      <li class="nav-item" id="sidebarKaryawan">
-        <a class="nav-link" href="<?=base_url()?>civitas/listkaryawan">
-          <i class="fas fa-fw fa-user-tie"></i>
-          <span>Karyawan</span></a>
+      <li class="nav-item" id="civitas">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#dropone" aria-expanded="true" aria-controls="dropone">
+          <i class="fas fa-users"></i>
+          <span>Civitas</span>
+        </a>
+        <div id="dropone" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-primary py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-light">Civitas</h6>
+            <a class="collapse-item text-light" href="<?= base_url()?>civitas/karyawan">Karyawan</a>
+            <a class="collapse-item text-light" href="<?= base_url()?>civitas/kpq">KPQ</a>
+          </div>
+        </div>
       </li>
       
       <li class="nav-item" id="Peserta">
