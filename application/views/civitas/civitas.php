@@ -187,9 +187,18 @@
                             <?php 
                                 $no = 0;
                                 foreach ($civitas as $civitas) :?>
-                                <tr>
+                                <?php if($civitas['login'] == 0):?>
+                                    <tr class="bg-secondary text-light">
+                                <?php else :?>
+                                    <tr>
+                                <?php endif;?>
                                     <td><center><?=++$no?></center></td>
                                     <td><?= $civitas['status']?></td>
+                                    <?php if($civitas['login'] == 0):?>
+                                        <td>belum</td>
+                                    <?php else :?>
+                                        <td>sudah</td>
+                                    <?php endif;?>
                                     <td><?= $civitas['nip']?></td>
                                     <td style="width: 25%"><?= $civitas['nama_kpq']?>
                                     <td><?= $civitas['no_hp']?></td>
