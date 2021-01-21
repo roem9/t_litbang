@@ -166,16 +166,17 @@
                 <div class="row">
                     <div class="col-6">
                         <?= $this->session->flashdata('pesan');?>
-                        </div>
+                    </div>
                 </div>
             <?php endif; ?>
-            <div class="card shadow mb-4" style="max-width: 1000px">
+            <div class="card shadow mb-4">
                 <div class="card-body">
                     <table id="dataTable" class="table table-sm fo-13">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Status</th>
+                                <th>Login</th>
                                 <th>NIK</th>
                                 <th>Nama KPQ</th>
                                 <th>No. Hp</th>

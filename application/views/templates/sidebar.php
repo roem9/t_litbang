@@ -37,6 +37,12 @@
         </div>
       </li>
       
+      <li class="nav-item" id="kelas">
+        <a class="nav-link" href="<?=base_url()?>kelas/">
+          <i class="fas fa-fw fa-building"></i>
+          <span>Kelas</span></a>
+      </li>
+      
       <li class="nav-item" id="Peserta">
         <a class="nav-link" href="<?= base_url()?>login/logout">
           <i class="fas fa-fw fa-sign-out-alt"></i>
