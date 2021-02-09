@@ -20,44 +20,43 @@ class Laporan extends CI_Controller {
         }
     }
     
-    public function pembinaan()
-    {   
-        $bulan = 1;
-        $tahun = 2021;
-        $filename = "Laporan_Pembinaan";
+    public function pembinaan(){   
+        $tgl_awal = $this->input->post("tgl_awal");
+        $tgl_akhir = $this->input->post("tgl_akhir");
+
+        // $bulan = 2;
+        // $tahun = 2021;
+        $filename = "Laporan_Pembinaan_".date("d-m-Y", strtotime($tgl_awal))."_".date("d-m-Y", strtotime($tgl_akhir));
 
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header('Content-Disposition: attachment;filename="'.$filename.'.xls"');
-        $kelas = $this->Main_model->get_all("kelas_pembinaan");
-        $i = 0;
-        foreach ($kelas as $kelas) {
-            $kbm = $this->Main_model->get_all("kbm_pembinaan", ["MONTH(tgl)" => $bulan, "YEAR(tgl)" => $tahun, "id_kelas" => $kelas['id_kelas']], "tgl", "ASC");
-            if($kbm){
-                $data['kelas'][$i] = $kelas;
-                $peserta = $this->Main_model->get_all("kelas_kpq", ["id_kelas" => $kelas['id_kelas']]);
-                $data['kelas'][$i]['peserta'] = [];
-                foreach ($peserta as $p => $peserta) {
-                    $kpq = $this->Main_model->get_one("kpq", ["nip" => $peserta['nip']]);
-                    $data['kelas'][$i]['peserta'][$p] = $kpq;
-                    $data['kelas'][$i]['peserta'][$p]['kbm'] = $this->Main_model->get_all_join_table("kbm_pembinaan", "presensi_kpq", "id_kbm", ["presensi_kpq.nip" => $kpq['nip']]);
-                }
-                
-                // sort kpq by name 
-                    usort($data['kelas'][$i]['peserta'], function($a, $b) {
-                        return $a['nama_kpq'] <=> $b['nama_kpq'];
-                    });
-                // sort kpq by name 
+        
+        $data['kelas'] = [];
+        $where = "tgl BETWEEN '$tgl_awal' AND '$tgl_akhir'";
+        
+        $kelas = $this->Main_model->get_all_group_by("kbm_pembinaan", $where, "id_kelas");
+        
+        foreach ($kelas as $i => $kelas) {
+            $data_kelas = $this->Main_model->get_one("kelas_pembinaan", ["id_kelas" => $kelas['id_kelas']]);
+            $data['kelas'][$i] = $data_kelas;
 
-                foreach ($kbm as $j => $kbm) {
+            $id = $kelas['id_kelas'];
+            $where = "tgl BETWEEN '$tgl_awal' AND '$tgl_akhir' AND id_kelas = $id";
+            $kbm = $this->Main_model->get_all("kbm_pembinaan", $where);
+            foreach ($kbm as $j => $kbm) {
+                if($kbm['keterangan'] == "badal"){
                     $badal = $this->Main_model->get_one("kbm_badal_pembinaan", ["id_kbm" => $kbm['id_kbm']]);
-                    if($badal) $kpq = $this->Main_model->get_one("kpq", ["nip" => $badal['nip_badal']]);
-                    else $kpq = $this->Main_model->get_one("kpq", ["nip" => $kbm['nip']]);
-                    $data['kelas'][$i]['kbm'][$j] = $kbm;
-                    $data['kelas'][$i]['kbm'][$j]['kpq'] = $kpq;
+                    $data_kpq = $this->Main_model->get_one("kpq", ["nip" => $badal['nip_badal']]);
+                } else {
+                    $data_kpq = $this->Main_model->get_one("kpq", ["nip" => $kbm['nip']]);
                 }
-                $i++;
+    
+                $data['kelas'][$i]['kbm'][$j] = $kbm;
+                $data['kelas'][$i]['kbm'][$j]['nama_kpq'] = $data_kpq['nama_kpq'];
+                $data['kelas'][$i]['kbm'][$j]['peserta'] = COUNT($this->Main_model->get_all("presensi_kpq", ["id_kbm" => $kbm['id_kbm'], "keterangan" => "hadir"]));
             }
         }
+        $i = 0;
 
         // var_dump($data);
         $this->load->view("pages/laporan/pembinaan", $data);

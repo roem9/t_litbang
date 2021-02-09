@@ -46,6 +46,44 @@ class Civitas extends CI_CONTROLLER{
         $this->load->view("templates/footer");
     }
 
+    public function pembinaan($nip){
+        $kpq = $this->Main_model->get_one("kpq", ["md5(nip)" => $nip]);
+        $data['title'] = "History Pembinaan " . $kpq['nama_kpq'];
+        $data['kpq'] = $kpq;
+        
+        $data['pembinaan'] = [];
+        $pembinaan = $this->Main_model->get_all("presensi_kpq", ["nip" => $kpq['nip']]);
+        foreach ($pembinaan as $i => $pembinaan) {
+            $data_pembinaan = $this->Main_model->get_one("kbm_pembinaan", ["id_kbm" => $pembinaan['id_kbm']]);
+            $data['pembinaan'][$i] = $data_pembinaan;
+            $data['pembinaan'][$i]['status'] = $pembinaan['keterangan'];
+
+            if($data_pembinaan['keterangan'] == "badal"){
+                $badal = $this->Main_model->get_one("kbm_badal_pembinaan", ["id_kbm" => $data_pembinaan['id_kbm']]);
+                $data_kpq = $this->Main_model->get_one("kpq", ["nip" => $badal['nip_badal']]);
+            } else {
+                $data_kpq = $this->Main_model->get_one("kpq", ["nip" => $data_pembinaan['nip']]);
+            }
+            $data['pembinaan'][$i]['nama_kpq'] = $data_kpq['nama_kpq'];
+        }
+
+        // var_dump($data);
+        // exit();
+        
+        $this->load->view("templates/header", $data);
+        $this->load->view("templates/sidebar");
+        $this->load->view("civitas/history-pembinaan", $data);
+        $this->load->view("templates/footer");        
+    }
+
+    public function download(){
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        header('Content-Disposition: attachment;filename="civitas.xls"');
+
+        $data['civitas'] = $this->Main_model->get_all("kpq", ["status !=" => "hapus"], "nama_kpq");
+        $this->load->view("pages/laporan/laporan-civitas", $data);
+    }
+
     public function add_civitas(){
         $tipe = $this->input->post("tipe", true);
         if($tipe == 'Karyawan'){

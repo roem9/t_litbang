@@ -6,11 +6,12 @@
             </div>
             <div class="">
                 <a href="#modalAdd" data-toggle="modal" class="btn btn-success btn-sm mb-3"><i class="fa fa-plus"></i> Tambah Kelas</a>
+                <a href="#modalLaporan" data-toggle="modal" class="btn btn-success btn-sm mb-3"><i class="fa fa-download"></i> Download</a>
                 <a onclick="reload_table()" data-toggle="modal" class="btn btn-sm btn-info mb-3 text-light"><i class="fa fa-sync"></i> Reload</a>
             </div>
             <div class="notification">
             </div>
-            <div class="card shadow mb-4" style="max-width: 1000px">
+            <div class="card shadow mb-4" style="max-width: 1200px">
                 <div class="card-body">
                     <div id="reload">
                         <table id="dataTable" class="table table-sm fo-13">
@@ -18,8 +19,10 @@
                                 <tr>
                                     <th width="5%">No</th>
                                     <th width="7%">Status</th>
+                                    <th width="9%">Tgl. Mulai</th>
+                                    <th width="9%">Tgl. Selesai</th>
                                     <th width="18%">Program</th>
-                                    <th width="30%">Waktu & Tempat</th>
+                                    <th width="20%">Waktu & Tempat</th>
                                     <th>Pengajar</th>
                                     <th width="5%">Peserta</th>
                                     <th width=7%>Detail</th>
@@ -49,7 +52,11 @@
                     <form id="formAdd" method="POST">
                         <div class="form-group">
                             <label for="tgl_mulai">Tgl Mulai</label>
-                            <input type="date" name="tgl_mulai" id="tgl_mulai_add" class="form-control form-control-sm" value="<?= date("Y-m-d");?>" required>
+                            <input type="date" name="tgl_mulai" id="tgl_mulai_add" class="form-control form-control-sm" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tgl_selesai">Tgl Selesai</label>
+                            <input type="date" name="tgl_selesai" id="tgl_selesai_add" class="form-control form-control-sm" value="" required>
                         </div>
                         <div class="form-group">
                             <label for="program">Program</label>
@@ -114,6 +121,38 @@
     </div>
 <!-- modal add kelas baru -->
 
+<!-- modal add kelas baru -->
+    <div class="modal fade" id="modalLaporan" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title nama-title">Download Laporan Pembinaan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-add">
+                    <div class="msg-add-data">
+                    </div>
+                    <form action="<?= base_url()?>laporan/pembinaan" method="post">
+                        <div class="form-group">
+                            <label for="tgl_awal">Tgl Awal</label>
+                            <input type="date" id="tgl_awal" name="tgl_awal" value="" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tgl_akhir">Tgl Akhir</label>
+                            <input type="date" id="tgl_akhir" name="tgl_akhir" value="" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="form-group d-flex justify-content-end">
+                            <input type="submit" value="Download Laporan" class="btn btn-sm btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- modal add kelas baru -->
+
 <!-- modal edit kelas -->
     <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -149,11 +188,11 @@
                                         <input type="hidden" name="id_kelas" id="id_kelas_edit">
                                         <div class="form-group">
                                             <label for="tgl_mulai">Tgl Mulai</label>
-                                            <input type="date" name="tgl_mulai" id="tgl_mulai_edit" class="form-control form-control-sm" readonly>
+                                            <input type="date" name="tgl_mulai" id="tgl_mulai_edit" class="form-control form-control-sm">
                                         </div>
                                         <div class="form-group">
                                             <label for="tgl_selesai">Tgl Selesai</label>
-                                            <input type="date" name="tgl_selesai" id="tgl_selesai_edit" class="form-control form-control-sm" readonly>
+                                            <input type="date" name="tgl_selesai" id="tgl_selesai_edit" class="form-control form-control-sm">
                                         </div>
                                         <div class="form-group">
                                             <label for="program">Program</label>
@@ -314,14 +353,14 @@
 
         // Load data for the table's content from an Ajax source
         "ajax": {
-            "url": "<?= base_url()?>kelas/ajax_list",
+            "url": "<?= base_url()?>kelas/ajax_list/<?= $status?>",
             "type": "POST"
         },
 
         //Set column definition initialisation properties.
         "columnDefs": [
         { 
-            "targets": [ 0, 3, 5, 6  ], //first column / numbering column
+            "targets": [ 0, 1, 2, 3, 5, 7, 8  ], //first column / numbering column
             "orderable": false, //set not orderable
         },
         ],
@@ -336,6 +375,7 @@
     $("#formAdd").submit(function(){
         if(confirm("Yakin akan menambahkan kelas pembinaan baru?")){
             var tgl_mulai = $("#tgl_mulai_add").val();
+            var tgl_selesai = $("#tgl_selesai_add").val();
             var program = $("#program_add").val();
             var status = "aktif";
             var nip = $("#nip_add").val();
@@ -347,7 +387,7 @@
                 type : "POST",
                 url : "<?= base_url()?>kelas/add_kelas",
                 dataType : "JSON",
-                data : {tgl_mulai : tgl_mulai,program : program,status : status,nip : nip,catatan : catatan,tempat : tempat,hari : hari,jam : jam},
+                data : {tgl_mulai:tgl_mulai, tgl_selesai:tgl_selesai, program : program,status : status,nip : nip,catatan : catatan,tempat : tempat,hari : hari,jam : jam},
                 success : function(data){
                     $("#formAdd").trigger("reset");
                     var msg = `
@@ -419,6 +459,8 @@
     $("#formEdit").submit(function(){
         if(confirm("Yakin akan mengubah data kelas ini?")){
             var id_kelas = $("#id_kelas_edit").val()
+            var tgl_mulai = $("#tgl_mulai_edit").val()
+            var tgl_selesai = $("#tgl_selesai_edit").val()
             var program = $("#program_edit").val();
             var nip = $("#nip_edit").val();
             var catatan = $("#catatan_edit").val();
@@ -429,7 +471,7 @@
                 type : "POST",
                 url : "<?= base_url()?>kelas/edit_kelas",
                 dataType : "JSON",
-                data : {id_kelas: id_kelas,program : program,nip : nip,catatan : catatan,tempat : tempat,hari : hari,jam : jam},
+                data : {id_kelas: id_kelas, tgl_mulai : tgl_mulai, tgl_selesai : tgl_selesai, program : program,nip : nip,catatan : catatan,tempat : tempat,hari : hari,jam : jam},
                 success : function(data){
                     // $("#modalEdit").modal("hide");
                     var msg = `
@@ -445,24 +487,45 @@
     })
 
     $("#dataTable").on("click", ".status", function(){
-        let id = $(this).data("id");
-        $.ajax({
-            type: 'POST',
-            url: '<?= base_url()?>kelas/get_kelas',
-            async: true,
-            data: {id_kelas: id},
-            dataType: 'json',
-            success: function(data){
-                $("#id_kelas_edit_status").val(data.id_kelas);
-                $("#tgl_mulai_edit_status").val(data.tgl_mulai);
-                $("#program_edit_status").val(data.program);
-                $("#nip_edit_status").val(data.nama_kpq);
-                $("#tempat_edit_status").val(data.tempat);
-                $("#hari_edit_status").val(data.hari);
-                $("#jam_edit_status").val(data.jam);
-                $("#catatan_edit_status").val(data.catatan);
-            }
-        })
+        let data = $(this).data("id");
+        data = data.split("|");
+        let id = data[0];
+        let status = data[1];
+
+        if(status == "aktif"){
+            msg = "Yakin akan mengaktifkan kelas ini?";
+            alert = "Berhasil mengaktifkan kelas pembinaan"
+        } else {
+            msg = "Yakin akan menonaktifkan kelas ini?"
+            alert = "Berhasil menonaktifkan kelas pembinaan"
+        }
+
+        if(confirm(msg)){
+            $.ajax({
+                url: "<?= base_url()?>kelas/edit_status",
+                dataType: "JSON",
+                data: {id_kelas: id, status:status},
+                method: "POST",
+                success: function(data){
+                    var msg = `
+                        <span class="fas icon-msg fa-check-circle"></span>
+                        <span class="msg">`+alert+`</span>
+                        <span class="close-msg">
+                            <span class="fas fa-times"></span>
+                        </span>`;
+                    $('.notification').html(msg);
+                    $('.notification').addClass("show");
+                    $('.notification').addClass("success");
+                    $('.notification').removeClass("hide");
+                    $('.notification').addClass("showAlert");
+                    setTimeout(function(){
+                        $('.notification').removeClass("show");
+                        $('.notification').addClass("hide");
+                    },5000);
+                    reload_table();
+                }
+            })
+        }
     })
 
     $("#formEditStatus").submit(function(){
@@ -608,6 +671,7 @@
             success: function(data){
                 $("#id_kelas_edit").val(data.id_kelas);
                 $("#tgl_mulai_edit").val(data.tgl_mulai);
+                $("#tgl_selesai_edit").val(data.tgl_selesai);
                 $("#tgl_selesai_edit").val(data.tgl_selesai);
                 $("#program_edit").val(data.program);
                 $("#nip_edit").val(data.nip);

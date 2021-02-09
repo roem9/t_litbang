@@ -181,6 +181,7 @@
                                 <th>Nama KPQ</th>
                                 <th>No. Hp</th>
                                 <th>Alamat</th>
+                                <th>Pembinaan</th>
                                 <th><center>Detail</center></th>
                             </tr>
                         </thead>
@@ -204,6 +205,7 @@
                                     <td style="width: 25%"><?= $civitas['nama_kpq']?>
                                     <td><?= $civitas['no_hp']?></td>
                                     <td><?= $civitas['alamat']?></td>
+                                    <td><center><a target="_blank" href="<?= base_url()?>civitas/pembinaan/<?= md5($civitas['nip'])?>" class="btn btn-sm btn-success"><i class="fa fa-book"></i></a></center></td>
                                     <td><center><a href="#" class="badge badge-warning modalCivitas" data-toggle="modal" data-target="#modalCivitas" data-id="<?= $civitas['nip']?>">detail</a></center></td>
                                 </tr>
                             <?php endforeach;?>

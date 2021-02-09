@@ -28,12 +28,14 @@
         <table border=1>
             <thead>
                 <tr>
-                    <td>No.</td>
-                    <td><center>Pemateri</center></td>
-                    <td colspan=5><center>Tgl</center></td>
-                    <td colspan=3><center>Program</center></td>
-                    <td>Materi</td>
-                    <td>Tugas</td>
+                    <th>No.</th>
+                    <th><center>Hari</center></th>
+                    <th>Tanggal</th>
+                    <th>Waktu</th>
+                    <th>Pemateri</th>
+                    <th>Materi</th>
+                    <th>Tugas</th>
+                    <th>Jumlah KPQ Hadir</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,93 +44,18 @@
                     foreach ($kelas['kbm'] as $kbm) :?>
                     <tr>
                         <td><center><?= $i++?></center></td>
-                        <td><?= $kbm['kpq']['nama_kpq']?></td>
-                        <td colspan=5><?= date("d-m-Y", strtotime($kbm['tgl']))?></td>
-                        <td colspan=3><?= $kbm['program_kbm']?></td>
+                        <td><?= $kbm['hari']?></td>
+                        <td><?= date("d-m-Y", strtotime($kbm['tgl']))?></td>
+                        <td><?= $kbm['jam']?></td>
+                        <td><?= $kbm['nama_kpq']?></td>
                         <td><?= $kbm['materi']?></td>
                         <td><?= $kbm['tugas']?></td>
+                        <td><center><?= $kbm['peserta']?></center></td>
                     </tr>
                 <?php endforeach;?>
             </tbody>
         </table>
-        <br>
-
-        <table border=1>
-            <thead>
-                <tr>
-                    <td rowspan=2>No</td>
-                    <td rowspan=2>Nama</td>
-                    <td colspan=5><center>Tgl Kbm</center></td>
-                    <td colspan=3><center>Rekap</center></td>
-                </tr>
-                <tr>
-                    <!-- tgl kbm -->
-                        <?php for ($i=0; $i < 5; $i++) :?>
-                            <td>
-                                <center>
-                                    <?php 
-                                        if(isset($kelas['kbm'][$i])) echo date("j", strtotime($kelas['kbm'][$i]['tgl']));
-                                        else echo "-";
-                                    ?>
-                                </center>
-                            </td>
-                        <?php endfor;?>
-                    <!-- tgl kbm -->
-
-                    <!-- rekap -->
-                        <td><center>H</center></td>
-                        <td><center>I</center></td>
-                        <td><center>S</center></td>
-                    <!-- rekap -->
-                </tr>
-            </thead>
-
-            <tbody>
-                <?php foreach ($kelas['peserta'] as $i => $peserta) :?>
-                    <tr>
-                        <td><center><?= $i+1?></center></td>
-                        <td><?= $peserta['nama_kpq']?></td>
-                        <?php 
-                            $hadir = 0;
-                            $izin = 0;
-                            $sakit = 0;
-
-                            for ($i=0; $i < 5; $i++) :?>
-                            <td>
-                                <center>
-                                    <?php
-                                        if(isset($kelas['kbm'][$i])) {
-                                            date("j", strtotime($kelas['kbm'][$i]['tgl']));
-                                            foreach ($peserta['kbm'] as $kbm) {
-                                                if($kbm['tgl'] == $kelas['kbm'][$i]['tgl']){
-                                                    if($kbm['keterangan'] == "hadir") {
-                                                        echo "H";
-                                                        $hadir++;
-                                                    }
-                                                    else if($kbm['keterangan'] == "izin") {
-                                                        echo "I";
-                                                        $izin++;
-                                                    }
-                                                    else if($kbm['keterangan'] == "sakit") {
-                                                        echo "S";
-                                                        $sakit++;
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            echo "-";
-                                        }
-                                    ?>
-                                </center>
-                            </td>
-                        <?php endfor;?>
-                        <td><center><?= $hadir?></center></td>
-                        <td><center><?= $izin?></center></td>
-                        <td><center><?= $sakit?></center></td>
-                    </tr>
-                <?php endforeach;?>
-            </tbody>
-        </table>
+        <br><br>
     <?php endforeach;?>
 </body>
 </html>

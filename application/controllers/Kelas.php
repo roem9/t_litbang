@@ -14,20 +14,22 @@
             }
         }
     
-        public function ajax_list()
+        public function ajax_list($status)
         {
-            $list = $this->Kel_model->get_datatables();
+            $list = $this->Kel_model->get_datatables("a.status = '$status'");
             $data = array();
             $no = $_POST['start'];
             foreach ($list as $kelas) {
                 $no++;
                 $row = array();
-                $row[] = $no;
+                $row[] = "<center>$no</center>";
                 if($kelas->status == "aktif"){
-                    $row[] = '<a href="#modalEditStatus" data-toggle="modal" data-id="'.$kelas->id_kelas.'" class="btn btn-sm btn-outline-success status">'.$kelas->status.'</a>';
+                    $row[] = '<a href="javascript:void(0)" data-toggle="modal" data-id="'.$kelas->id_kelas.'|nonaktif" class="btn btn-sm btn-outline-success status">'.$kelas->status.'</a>';
                 } else {
-                    $row[] = $kelas->status;
+                    $row[] = '<a href="javascript:void(0)" data-toggle="modal" data-id="'.$kelas->id_kelas.'|aktif" class="btn btn-sm btn-outline-secondary status">'.$kelas->status.'</a>';
                 }
+                $row[] = date("d-m-Y", strtotime($kelas->tgl_mulai));
+                $row[] = date("d-m-Y", strtotime($kelas->tgl_selesai));
                 $row[] = $kelas->program;
                 $row[] = $kelas->jadwal;
                 $row[] = $kelas->nama_kpq;
@@ -39,17 +41,36 @@
     
             $output = array(
                             "draw" => $_POST['draw'],
-                            "recordsTotal" => $this->Kel_model->count_all(),
-                            "recordsFiltered" => $this->Kel_model->count_filtered(),
+                            "recordsTotal" => $this->Kel_model->count_all("a.status = '$status'"),
+                            "recordsFiltered" => $this->Kel_model->count_filtered("a.status = '$status'"),
                             "data" => $data,
                     );
             //output to json format
             echo json_encode($output);
         }
     
-        public function index(){
-            $data['title'] = "List Kelas Pembinaan";
-            $data['header'] = "List Kelas Pembinaan";
+        public function aktif(){
+            $data['title'] = "List Kelas Pembinaan Aktif";
+            $data['header'] = "List Kelas Pembinaan Aktif";
+            $data['status'] = "aktif";
+            
+            // form
+            $data['program'] = $this->Main_model->get_all("program", "", "nama_program");
+            $data['kpq'] = $this->Main_model->get_all("kpq", ["status" => "aktif"], "nama_kpq");
+            $data['tempat'] = $this->Main_model->get_all("ruangan", "", "nama_ruangan");
+            // $data['jam'] = $this->Main_model->get_all("waktu", "", "jam");
+            $data['jam'] = ["13.00-14.30"];
+
+            $this->load->view("templates/header", $data);
+            $this->load->view("templates/sidebar");
+            $this->load->view("kelas/list_kelas", $data);
+            $this->load->view("templates/footer");
+        }
+
+        public function nonaktif(){
+            $data['title'] = "List Kelas Pembinaan Nonaktif";
+            $data['header'] = "List Kelas Pembinaan Nonaktif";
+            $data['status'] = "nonaktif";
             
             // form
             $data['program'] = $this->Main_model->get_all("program", "", "nama_program");
@@ -80,6 +101,7 @@
                 $data = [
                     // "id_kelas" => "";
                     "tgl_mulai" => $this->input->post("tgl_mulai", TRUE),
+                    "tgl_selesai" => $this->input->post("tgl_selesai", TRUE),
                     "program" => $this->input->post("program", TRUE),
                     "status" => "aktif",
                     "nip" => $this->input->post("nip", TRUE),
@@ -169,6 +191,8 @@
                 $id_kelas = $this->input->post("id_kelas");
 
                 $data = [
+                    "tgl_mulai" => $this->input->post("tgl_mulai", TRUE),
+                    "tgl_selesai" => $this->input->post("tgl_selesai", TRUE),
                     "program" => $this->input->post("program", TRUE),
                     "nip" => $this->input->post("nip", TRUE),
                     "catatan" => $this->input->post("catatan", TRUE),
@@ -181,11 +205,12 @@
                 echo json_encode("1");
             }
 
-            public function nonaktif_kelas(){
+            public function edit_status(){
                 $id_kelas = $this->input->post("id_kelas");
+                $status = $this->input->post("status");
                 $data = [
                     "tgl_selesai" => $this->input->post("tgl_selesai"),
-                    "status" => "nonaktif"
+                    "status" => $status
                 ];
 
                 $this->Main_model->edit_data("kelas_pembinaan", ["id_kelas" => $id_kelas], $data);

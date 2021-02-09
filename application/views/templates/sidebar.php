@@ -33,15 +33,30 @@
             <h6 class="collapse-header text-light">Civitas</h6>
             <a class="collapse-item text-light" href="<?= base_url()?>civitas/karyawan">Karyawan</a>
             <a class="collapse-item text-light" href="<?= base_url()?>civitas/kpq">KPQ</a>
+            <a class="collapse-item text-light" href="<?= base_url()?>civitas/download">Download Data</a>
           </div>
         </div>
       </li>
       
       <li class="nav-item" id="kelas">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#droptwo" aria-expanded="true" aria-controls="droptwo">
+          <i class="fas fa-fw fa-building"></i>
+          <span>Kelas Pembinaan</span>
+        </a>
+        <div id="droptwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-primary py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-light">Kelas Pembinaan</h6>
+            <a class="collapse-item text-light" href="<?= base_url()?>kelas/aktif">Kelas Aktif</a>
+            <a class="collapse-item text-light" href="<?= base_url()?>kelas/nonaktif">Kelas Nonaktif</a>
+          </div>
+        </div>
+      </li>
+      
+      <!-- <li class="nav-item" id="kelas">
         <a class="nav-link" href="<?=base_url()?>kelas/">
           <i class="fas fa-fw fa-building"></i>
-          <span>Kelas</span></a>
-      </li>
+          <span>Kelas Pembinaan</span></a>
+      </li> -->
       
       <li class="nav-item" id="Peserta">
         <a class="nav-link" href="<?= base_url()?>login/logout">
