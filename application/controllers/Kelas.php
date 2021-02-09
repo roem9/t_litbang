@@ -31,7 +31,7 @@
                 $row[] = date("d-m-Y", strtotime($kelas->tgl_mulai));
                 $row[] = date("d-m-Y", strtotime($kelas->tgl_selesai));
                 $row[] = $kelas->program;
-                $row[] = $kelas->jadwal;
+                $row[] = $kelas->hari . " " . $kelas->jam . " (" . $kelas->tempat . ")";
                 $row[] = $kelas->nama_kpq;
                 $row[] = '<center><a href="#modalEdit" data-toggle="modal" data-id="'.$kelas->id_kelas.'" class="btn btn-sm btn-outline-info peserta">' . COUNT($this->Main_model->get_all("kelas_kpq", ["id_kelas" => $kelas->id_kelas])) . '</a></center>';
                 $row[] = '<a href="#modalEdit" data-toggle="modal" data-id="'.$kelas->id_kelas.'" class="btn btn-sm btn-info detail">detail</a>';

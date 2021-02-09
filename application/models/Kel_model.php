@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Kel_model extends CI_Model { 
     var $table = 'kelas_pembinaan';
     var $column_order = array(null,'status',null,null,'program',null,'nama_kpq',null,null); //set column field database for datatable orderable
-    var $column_search = array('status','program','nama_kpq','hari','tempat'); //set column field database for datatable searchable 
+    var $column_search = array('a.status','a.program','b.nama_kpq','hari','tempat'); //set column field database for datatable searchable 
     var $order = array('id_kelas' => 'asc'); // default order 
  
     public function __construct()
@@ -16,9 +16,7 @@ class Kel_model extends CI_Model {
  
     private function _get_datatables_query($where)
     {
-        // $this->db->from($this->table);
-        // $this->db->from("kelas_pembinaan as a");
-        $this->db->select("a.id_kelas id_kelas, a.tgl_mulai tgl_mulai, a.tgl_selesai tgl_selesai, a.status status, a.program program, CONCAT(a.hari, ' ', a.jam, ' (', a.tempat, ')') jadwal, b.nip nip, b.nama_kpq nama_kpq");
+        $this->db->select("a.id_kelas id_kelas, a.tgl_mulai tgl_mulai, a.tgl_selesai tgl_selesai, a.status status, a.program program, a.hari, a.jam, a.tempat, b.nip nip, b.nama_kpq nama_kpq");
         $this->db->from("kelas_pembinaan as a");
         $this->db->join("kpq as b", "a.nip = b.nip");
         $this->db->where($where);
@@ -76,9 +74,8 @@ class Kel_model extends CI_Model {
  
     public function count_all($where)
     {
-        // $this->db->from($this->table);
+        $this->db->select("a.id_kelas id_kelas, a.tgl_mulai tgl_mulai, a.tgl_selesai tgl_selesai, a.status status, a.program program, a.hari, a.jam, a.tempat, b.nip nip, b.nama_kpq nama_kpq");
         $this->db->from("kelas_pembinaan as a");
-        $this->db->select("a.id_kelas id_kelas, a.tgl_mulai tgl_mulai, a.tgl_selesai tgl_selesai, a.status status, a.program program, CONCAT(a.hari, ' ', a.jam, ' (', a.tempat, ')') as jadwal, b.nip nip, b.nama_kpq nama_kpq");
         $this->db->join("kpq as b", "a.nip = b.nip");
         $this->db->where($where);
         return $this->db->count_all_results();
