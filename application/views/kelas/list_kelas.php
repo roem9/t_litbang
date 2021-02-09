@@ -100,12 +100,7 @@
                         </div>
                         <div class="form-group">
                             <label for="jam">Jam</label>
-                            <select name="jam" id="jam_add" class="form-control form-control-sm" required>
-                                <option value="">Pilih Jam</option>
-                                <?php foreach ($jam as $data) :?>
-                                    <option value="<?= $data?>"><?= $data?></option>
-                                <?php endforeach;?>
-                            </select>
+                            <input type="text" name="jam" id="jam_add" class="form-control form-control-sm" required>
                         </div>
                         <div class="form-group">
                             <label for="catatan">Catatan</label>
@@ -236,12 +231,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="jam">Jam</label>
-                                            <select name="jam" id="jam_edit" class="form-control form-control-sm" required>
-                                                <option value="">Pilih Jam</option>
-                                                <?php foreach ($jam as $data) :?>
-                                                    <option value="<?= $data?>"><?= $data?></option>
-                                                <?php endforeach;?>
-                                            </select>
+                                            <input type="text" name="jam" id="jam_edit" class="form-control form-control-sm" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="catatan">Catatan</label>
