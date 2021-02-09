@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  
 class Kel_model extends CI_Model { 
     var $table = 'kelas_pembinaan';
-    var $column_order = array(null,'status',null,null,'program',null,'nama_kpq',null,null); //set column field database for datatable orderable
+    var $column_order = array(null,'a.status',null,null,'a.program',null,'b.nama_kpq',null,null); //set column field database for datatable orderable
     var $column_search = array('a.status','a.program','b.nama_kpq','hari','tempat'); //set column field database for datatable searchable 
     var $order = array('id_kelas' => 'asc'); // default order 
  
