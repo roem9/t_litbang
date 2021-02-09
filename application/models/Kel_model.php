@@ -3,9 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  
 class Kel_model extends CI_Model { 
     var $table = 'kelas_pembinaan';
-    var $column_order = array(null,'status',null,null,'program',null,'nama_kpq',null,null); //set column field database for datatable orderable
-    var $column_search = array('a.status','a.program','b.nama_kpq','hari','tempat'); //set column field database for datatable searchable 
-    var $order = array('id_kelas' => 'asc'); // default order 
+    var $column_order = array(null,'a.status',null,null,'a.program',null,'b.nama_kpq',null,null); //set column field database for datatable orderable
+    var $column_search = array('a.status','a.program','b.nama_kpq','a.hari','a.tempat'); //set column field database for datatable searchable 
+    var $order = array('a.id_kelas' => 'asc'); // default order 
  
     public function __construct()
     {
@@ -16,7 +16,7 @@ class Kel_model extends CI_Model {
  
     private function _get_datatables_query($where)
     {
-        $this->db->select("a.id_kelas id_kelas, a.tgl_mulai tgl_mulai, a.tgl_selesai tgl_selesai, a.status status, a.program program, a.hari, a.jam, a.tempat, b.nip nip, b.nama_kpq nama_kpq");
+        $this->db->select("a.id_kelas, a.tgl_mulai, a.tgl_selesai, a.status, a.program, a.hari, a.jam, a.tempat, b.nip, b.nama_kpq");
         $this->db->from("kelas_pembinaan as a");
         $this->db->join("kpq as b", "a.nip = b.nip");
         $this->db->where($where);
@@ -74,7 +74,7 @@ class Kel_model extends CI_Model {
  
     public function count_all($where)
     {
-        $this->db->select("a.id_kelas id_kelas, a.tgl_mulai tgl_mulai, a.tgl_selesai tgl_selesai, a.status status, a.program program, a.hari, a.jam, a.tempat, b.nip nip, b.nama_kpq nama_kpq");
+        $this->db->select("a.id_kelas, a.tgl_mulai, a.tgl_selesai, a.status, a.program, a.hari, a.jam, a.tempat, b.nip, b.nama_kpq");
         $this->db->from("kelas_pembinaan as a");
         $this->db->join("kpq as b", "a.nip = b.nip");
         $this->db->where($where);
