@@ -12,9 +12,11 @@
                     <tr>
                         <th style="padding:10px">No.</th>
                         <th style="padding:10px">Status</th>
+                        <th style="padding:10px">Program</th>
                         <th style="padding:10px">Pengajar</th>
                         <th style="padding:10px">Materi</th>
                         <th style="padding:10px">Tugas</th>
+                        <th style="padding:10px">Tgl</th>
                         <th style="padding:10px">Waktu</th>
                     </tr>
                 </thead>
@@ -25,10 +27,12 @@
                         <tr>
                             <td style="padding:10px"><center><?= $no++?></center></td>
                             <td style="padding:10px"><?= $pembinaan['status']?></td>
+                            <td style="padding:10px"><?= $pembinaan['program_kbm']?></td>
                             <td style="padding:10px"><?= $pembinaan['nama_kpq']?></td>
                             <td style="padding:10px"><?= $pembinaan['materi']?></td>
                             <td style="padding:10px"><?= $pembinaan['tugas']?></td>
-                            <td style="padding:10px"><?= date("d-m-Y", strtotime($pembinaan['tgl'])) . ", " . $pembinaan['jam']?></td>
+                            <td style="padding:10px"><?= date("d-m-Y", strtotime($pembinaan['tgl']))?></td>
+                            <td style="padding:10px"><?= $pembinaan['jam']?></td>
                         </tr>
                     <?php endforeach;?>
                 </tbody>
