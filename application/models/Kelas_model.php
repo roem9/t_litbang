@@ -1,94 +1,84 @@
 <?php
-class Kelas_model extends CI_Model {
+defined('BASEPATH') OR exit('No direct script access allowed');
+ 
+class Kelas_model extends CI_Model { 
+   var $table = 'kelas_pembinaan';
+   var $column_order = array(null,'a.status',null,null,'a.program',null,'b.nama_kpq',null,null); //set column field database for datatable orderable
+   var $column_search = array('a.status','a.program','b.nama_kpq','a.hari','a.tempat'); //set column field database for datatable searchable 
+   var $order = array('a.id_kelas' => 'asc'); // default order 
+ 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Main_model');
+        $this->load->database();
+    }
+ 
+    private function _get_datatables_query($where)
+    {
+         $this->db->select("a.id_kelas, a.tgl_mulai, a.tgl_selesai, a.status, a.program, a.hari, a.jam, a.tempat, b.nip, b.nama_kpq");
+         $this->db->from("kelas_pembinaan as a");
+         $this->db->join("kpq as b", "a.nip = b.nip");
+         $this->db->where($where);
+ 
+        $i = 0;
+     
+        foreach ($this->column_search as $item) // loop column 
+        {
+            if($_POST['search']['value']) // if datatable send POST for search
+            {
+                 
+                if($i===0) // first loop
+                {
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $_POST['search']['value']);
+                }
+                else
+                {
+                    $this->db->or_like($item, $_POST['search']['value']);
+                }
+ 
+                if(count($this->column_search) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
+            $i++;
+        }
+         
+        if(isset($_POST['order'])) // here order processing
+        {
+            $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        } 
 
-   // Get DataTable data
-   function get_kelas($postData=null){
+        else if(isset($this->order))
+        {
+            $order = $this->order;
+            $this->db->order_by(key($order), $order[key($order)]);
+        }
+    }
+ 
+    function get_datatables($where)
+    {
+        $this->_get_datatables_query($where);
+        if($_POST['length'] != -1)
+        $this->db->limit($_POST['length'], $_POST['start']);
+        $query = $this->db->get();
+        return $query->result();
+    }
+ 
+    function count_filtered($where)
+    {
+        $this->_get_datatables_query($where);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+ 
+    public function count_all($where)
+    {
 
-      $response = array();
-
-      ## Read value
-      $draw = $postData['draw'];
-      $start = $postData['start'];
-      $rowperpage = $postData['length']; // Rows display per page
-      $columnIndex = $postData['order'][0]['column']; // Column index
-      $columnName = $postData['columns'][$columnIndex]['data']; // Column name
-      $columnSortOrder = $postData['order'][0]['dir']; // asc or desc
-      $searchValue = $postData['search']['value']; // Search value
-
-      ## Search 
-      $search_arr = array();
-      $searchQuery = "";
-      if($searchValue != ''){
-         $search_arr[] = " (a.status like '%".$searchValue."%' or 
-         a.program like '%".$searchValue."%' or 
-         b.nama_kpq like '%".$searchValue."%') ";
-      }
-      if(count($search_arr) > 0){
-         $searchQuery = implode(" and ",$search_arr);
-      }
-
-      ## Total number of records without filtering
-      $this->db->select('count(*) as allcount');
-      // $records = $this->db->get('kelas_pembinaan')->result();
-      $this->db->from("kelas_pembinaan as a");
-      $this->db->join("kpq as b", "a.nip = b.nip");
-      $records = $this->db->get()->result();
-      $totalRecords = $records[0]->allcount;
-
-      ## Total number of record with filtering
-      $this->db->select('count(*) as allcount');
-      if($searchQuery != '')
-      $this->db->where($searchQuery);
-      // $records = $this->db->get('kelas_pembinaan')->result();
-      $this->db->from("kelas_pembinaan as a");
-      $this->db->join("kpq as b", "a.nip = b.nip");
-      $records = $this->db->get()->result();
-      $totalRecordwithFilter = $records[0]->allcount;
-
-      ## Fetch records
-      // $this->db->select('*');
-      
-      $this->db->select("a.id_kelas id_kelas, a.status status, a.program program, CONCAT(a.hari, ' ', a.jam, ' (', a.tempat, ')') as jadwal, b.nip nip, b.nama_kpq nama_kpq");
-      $this->db->from("kelas_pembinaan as a");
-      $this->db->join("kpq as b", "a.nip = b.nip");
-      if($searchQuery != '')
-      $this->db->where($searchQuery);
-      $this->db->order_by($columnName, $columnSortOrder);
-      $this->db->limit($rowperpage, $start);
-      // $records = $this->db->get('kelas_pembinaan')->result();
-      $records = $this->db->get()->result();
-
-      $data = array();
-
-      foreach($records as $i => $record ){
-         if($record->status == "aktif"){
-            $status = '<a href="#modalEditStatus" data-toggle="modal" data-id="'.$record->id_kelas.'" class="btn btn-sm btn-outline-success status">'.$record->status.'</a>';
-         } else {
-            $status = $record->status;
-         }
-         $peserta = '<center><a href="#modalEdit" data-toggle="modal" data-id="'.$record->id_kelas.'" class="btn btn-sm btn-outline-info peserta">' . COUNT($this->Main_model->get_all("kelas_kpq", ["id_kelas" => $record->id_kelas])) . '</a></center>';
-         $detail = '<a href="#modalEdit" data-toggle="modal" data-id="'.$record->id_kelas.'" class="btn btn-sm btn-info detail">detail</a>';
-
-         $data[] = array( 
-            "nomor" => $i,
-            "id_kelas" => $record->id_kelas,
-            "status" => $status,
-            "program" => $record->program,
-            "peserta" => $peserta,
-            "detail" => $detail,
-            "nama_kpq" => $record->nama_kpq,
-            "jadwal" => $record->jadwal,
-         ); 
-      }
-
-      ## Response
-      $response = array(
-         "draw" => intval($draw),
-         "iTotalRecords" => $totalRecords,
-         "iTotalDisplayRecords" => $totalRecordwithFilter,
-         "aaData" => $data
-      );
-
-      return $response; 
-   }
+         $this->db->select("a.id_kelas, a.tgl_mulai, a.tgl_selesai, a.status, a.program, a.hari, a.jam, a.tempat, b.nip, b.nama_kpq");
+         $this->db->from("kelas_pembinaan as a");
+         $this->db->join("kpq as b", "a.nip = b.nip");
+         $this->db->where($where);       
+        return $this->db->count_all_results();
+    }
 }

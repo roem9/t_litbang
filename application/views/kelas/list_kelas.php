@@ -344,7 +344,12 @@
         // Load data for the table's content from an Ajax source
         "ajax": {
             "url": "<?= base_url()?>kelas/ajax_list/<?= $status?>",
-            "type": "POST"
+            "type": "POST",
+            error: function (xhr, error, code)
+            {
+                console.log(xhr);
+                console.log(code);
+            }
         },
 
         //Set column definition initialisation properties.

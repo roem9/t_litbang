@@ -16,7 +16,7 @@
     
         public function ajax_list($status)
         {
-            $list = $this->Kel_model->get_datatables("a.status = '$status'");
+            $list = $this->Kelas_model->get_datatables("a.status = '$status'");
             $data = array();
             $no = $_POST['start'];
             foreach ($list as $kelas) {
@@ -41,8 +41,8 @@
     
             $output = array(
                             "draw" => $_POST['draw'],
-                            "recordsTotal" => $this->Kel_model->count_all("a.status = '$status'"),
-                            "recordsFiltered" => $this->Kel_model->count_filtered("a.status = '$status'"),
+                            "recordsTotal" => $this->Kelas_model->count_all("a.status = '$status'"),
+                            "recordsFiltered" => $this->Kelas_model->count_filtered("a.status = '$status'"),
                             "data" => $data,
                     );
             //output to json format
