@@ -67,6 +67,9 @@ class Civitas extends CI_CONTROLLER{
             $data['pembinaan'][$i]['nama_kpq'] = $data_kpq['nama_kpq'];
         }
 
+        usort($data['pembinaan'], function($a, $b) {
+            return $a['program_kbm'] <=> $b['program_kbm'];
+        });
         // var_dump($data);
         // exit();
         
