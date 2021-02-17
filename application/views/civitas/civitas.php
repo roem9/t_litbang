@@ -264,7 +264,7 @@
                 $("#jurusan").val(data.jurusan);
                 $("#no_ktp").val(data.no_ktp);
                 
-                $("#fotoKpq").attr("src", "https://civits.tar-q.com/assets/img/foto/"+data.foto);
+                $("#fotoKpq").attr("src", "https://civitas.tar-q.com/assets/img/foto/"+data.foto);
                 // console.log(data.foto)
 
                 if(data.tgl_keluar != "0000-00-00"){
