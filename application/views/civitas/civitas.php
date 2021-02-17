@@ -13,16 +13,19 @@
                         <div class="card-header">
                             <ul class="nav nav-tabs card-header-tabs">
                                 <li class="nav-item">
-                                    <a href="#" class='nav-link' id="btn-form-1" data-id=""><i class="fas fa-user"></i></a>
+                                    <a href="javascript:void(0)" class='nav-link' id="btn-form-1" data-id=""><i class="fas fa-user"></i></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class='nav-link' id="btn-form-2" data-id=""><i class="fas fa-book"></i></a>
+                                    <a href="javascript:void(0)" class='nav-link' id="btn-form-2" data-id=""><i class="fas fa-book"></i></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class='nav-link' id="btn-form-3" data-id=""><i class="fas fa-user-cog"></i></a>
+                                    <a href="javascript:void(0)" class='nav-link' id="btn-form-3" data-id=""><i class="fas fa-user-cog"></i></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class='nav-link' id="btn-form-4" data-id=""><i class="fas fa-plus"></i></a>
+                                    <a href="javascript:void(0)" class='nav-link' id="btn-form-4" data-id=""><i class="fas fa-plus"></i></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="javascript:void(0)" class='nav-link' id="btn-form-5" data-id=""><i class="fas fa-image"></i></a>
                                 </li>
                             </ul>
                         </div>
@@ -144,6 +147,13 @@
                                     </div>
                                 </form>
                             </div>
+                            <div class="form-detail" id="form-5">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <img src="" class='img-rounded img-fluid' id="fotoKpq">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -225,6 +235,7 @@
     $("#form-2").hide();
     $("#form-3").hide();
     $("#form-4").hide();
+    $("#form-5").hide();
 
     $(".modalCivitas").click(function(){
         const id = $(this).data('id');
@@ -253,6 +264,9 @@
                 $("#jurusan").val(data.jurusan);
                 $("#no_ktp").val(data.no_ktp);
                 
+                $("#fotoKpq").attr("src", "https://civits.tar-q.com/assets/img/foto/"+data.foto);
+                // console.log(data.foto)
+
                 if(data.tgl_keluar != "0000-00-00"){
                     let oneDay = 24*60*60*1000;
                     let tgl_masuk = new Date(data.tgl_masuk);
@@ -314,11 +328,13 @@
         $("#btn-form-2").removeClass("active")
         $("#btn-form-3").removeClass("active")
         $("#btn-form-4").removeClass("active")
+        $("#btn-form-5").removeClass("active")
 
         $("#form-1").show();
         $("#form-2").hide();
         $("#form-3").hide();
         $("#form-4").hide();
+        $("#form-5").hide();
     })
     
     $("#btn-next-1").click(function(){
@@ -326,11 +342,13 @@
         $("#btn-form-2").addClass("active")
         $("#btn-form-3").removeClass("active")
         $("#btn-form-4").removeClass("active")
+        $("#btn-form-5").removeClass("active")
 
         $("#form-1").hide();
         $("#form-2").show();
         $("#form-3").hide();
         $("#form-4").hide();
+        $("#form-5").hide();
     })
 
     $("#btn-form-2").click(function(){
@@ -338,11 +356,13 @@
         $("#btn-form-2").addClass("active")
         $("#btn-form-3").removeClass("active")
         $("#btn-form-4").removeClass("active")
+        $("#btn-form-5").removeClass("active")
 
         $("#form-1").hide();
         $("#form-2").show();
         $("#form-3").hide();
         $("#form-4").hide();
+        $("#form-5").hide();
     })
     
     $("#btn-back-2").click(function(){
@@ -350,11 +370,13 @@
         $("#btn-form-2").removeClass("active")
         $("#btn-form-3").removeClass("active")
         $("#btn-form-4").removeClass("active")
+        $("#btn-form-5").removeClass("active")
 
         $("#form-1").show();
         $("#form-2").hide();
         $("#form-3").hide();
         $("#form-4").hide();
+        $("#form-5").hide();
     })
 
     $("#btn-form-3").click(function(){
@@ -362,11 +384,13 @@
         $("#btn-form-2").removeClass("active")
         $("#btn-form-3").addClass("active")
         $("#btn-form-4").removeClass("active")
+        $("#btn-form-5").removeClass("active")
 
         $("#form-1").hide();
         $("#form-2").hide();
         $("#form-3").show();
         $("#form-4").hide();
+        $("#form-5").hide();
     })
     
     $("#btn-form-4").click(function(){
@@ -374,11 +398,27 @@
         $("#btn-form-2").removeClass("active")
         $("#btn-form-3").removeClass("active")
         $("#btn-form-4").addClass("active")
+        $("#btn-form-5").removeClass("active")
 
         $("#form-1").hide();
         $("#form-2").hide();
         $("#form-3").hide();
         $("#form-4").show();
+        $("#form-5").hide();
+    })
+    
+    $("#btn-form-5").click(function(){
+        $("#btn-form-1").removeClass("active")
+        $("#btn-form-2").removeClass("active")
+        $("#btn-form-3").removeClass("active")
+        $("#btn-form-4").removeClass("active")
+        $("#btn-form-5").addClass("active")
+
+        $("#form-1").hide();
+        $("#form-2").hide();
+        $("#form-3").hide();
+        $("#form-4").hide();
+        $("#form-5").show();
     })
 
     $("#btn-submit-1").click(function(){
