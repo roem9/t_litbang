@@ -22,7 +22,6 @@
             foreach ($list as $kelas) {
                 $no++;
                 $row = array();
-                $row[] = "<center>$no</center>";
                 if($kelas->status == "aktif"){
                     $row[] = '<a href="javascript:void(0)" data-toggle="modal" data-id="'.$kelas->id_kelas.'|nonaktif" class="btn btn-sm btn-outline-success status">'.$kelas->status.'</a>';
                 } else {
@@ -48,10 +47,20 @@
             //output to json format
             echo json_encode($output);
         }
+
+        function getListKelas($status) { //data data produk by JSON object
+            header('Content-Type: application/json');
+            $output = $this->Kelas_model->getListKelas($status);
+            echo $output;
+        }
     
         public function aktif(){
+            // $data['title'] = "List Kelas Pembinaan Aktif";
+            // $data['header'] = "List Kelas Pembinaan Aktif";
             $data['title'] = "List Kelas Pembinaan Aktif";
-            $data['header'] = "List Kelas Pembinaan Aktif";
+            $data['sidebar'] = "kelas";
+            $data['sidebarDropdown'] = "kelas aktif";
+            $data['deskripsi'] = 'List seluruh kelas pembinaan dengan status aktif';
             $data['status'] = "aktif";
             
             // form
@@ -61,15 +70,25 @@
             // $data['jam'] = $this->Main_model->get_all("waktu", "", "jam");
             $data['jam'] = ["13.00-14.30"];
 
-            $this->load->view("templates/header", $data);
-            $this->load->view("templates/sidebar");
+            // $this->load->view("templates/header", $data);
+            // $this->load->view("templates/sidebar");
+            // $this->load->view("kelas/list_kelas", $data);
+            // $this->load->view("templates/footer");
+
+            $this->load->view("layout/header", $data);
+            $this->load->view("layout/navbar", $data);
             $this->load->view("kelas/list_kelas", $data);
-            $this->load->view("templates/footer");
         }
 
         public function nonaktif(){
+            // $data['title'] = "List Kelas Pembinaan Nonaktif";
+            // $data['header'] = "List Kelas Pembinaan Nonaktif";
+            // $data['status'] = "nonaktif";
+
             $data['title'] = "List Kelas Pembinaan Nonaktif";
-            $data['header'] = "List Kelas Pembinaan Nonaktif";
+            $data['sidebar'] = "kelas";
+            $data['sidebarDropdown'] = "kelas nonaktif";
+            $data['deskripsi'] = 'List seluruh kelas pembinaan dengan status nonaktif';
             $data['status'] = "nonaktif";
             
             // form
@@ -79,10 +98,13 @@
             // $data['jam'] = $this->Main_model->get_all("waktu", "", "jam");
             $data['jam'] = ["13.00-14.30"];
 
-            $this->load->view("templates/header", $data);
-            $this->load->view("templates/sidebar");
+            // $this->load->view("templates/header", $data);
+            // $this->load->view("templates/sidebar");
+            // $this->load->view("kelas/list_kelas", $data);
+            // $this->load->view("templates/footer");
+            $this->load->view("layout/header", $data);
+            $this->load->view("layout/navbar", $data);
             $this->load->view("kelas/list_kelas", $data);
-            $this->load->view("templates/footer");
         }
 
         public function data_kelas(){
